@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "6258498383",
+    "project_id": "groupie-chat-app",
+    "storage_bucket": "groupie-chat-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6258498383:android:3bf9bde93a2ed2bdcdc33a",
+        "android_client_info": {
+          "package_name": "com.example.groupie_chatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6258498383-bkufc05dcooqaclvfcblj8ijg6h427k6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.groupie_chatapp",
+            "certificate_hash": "d004935fd65e46e6c04fd831db78a61b62fa783d"
+          }
+        },
+        {
+          "client_id": "6258498383-etdnfp64djefmkugop5k8ao20jv7onlv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALS4hzJJsTsF2exqPXf_HVwze-abEwGgs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "6258498383-etdnfp64djefmkugop5k8ao20jv7onlv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
