@@ -10,7 +10,7 @@ An Open-Source Group Discussion App for all your needs!
 
 [<img src="https://img.shields.io/badge/Google%20Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white"
      alt="Get it on Google Drive"
-     height="60">](https://drive.google.com/file/d/1UtzRLlJt7SEVHxOKc5UfjhsgWxIneOre/view?usp=sharing)
+     height="60">](https://drive.google.com/drive/folders/1MB8VuN34w6NApx-c2ba54x5ygw_x1peX?usp=share_link)
 &nbsp;
 [<img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white"
      alt="Download from GitHub"
