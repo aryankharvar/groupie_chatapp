@@ -18,10 +18,11 @@ An Open-Source Group Discussion App for all your needs!
 
 ## Features
 
-- Chat with your friends in the group
+- Chat with your friends in the group with Real-Time Messaging (Cloud Firestore)
 - Search different groups and join them to chat
 - Create your own groups with the group icon
 - Set your own profile image
+- Message Notification (Push Notification)
 - No Subscription
 - No Ads
 
