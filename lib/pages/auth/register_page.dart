@@ -104,7 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: passwordController,
                     obscureText: true,
                     validator: (value){
-                      return value!.length>6?null:"Please enter a valid password";
+                      return value!.length>6?null:"Password must contain at least seven characters.";
                     },
                     decoration: commonTextInputDecoration.copyWith(
                       labelText: "Password",

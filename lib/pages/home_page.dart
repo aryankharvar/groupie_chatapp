@@ -29,9 +29,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
+    setToken();
     super.initState();
+
   }
 
+  setToken(){
+    DataBaseService().getFireBaseMessagingToken();
+  }
 
 
   @override
@@ -198,11 +203,12 @@ class _HomePageState extends State<HomePage> {
 
 
 
-  groupList(){
+  groupList() {
     return StreamBuilder(
       stream: DataBaseService().getUserGroups(),
         builder: (context,AsyncSnapshot snapshot){
       if(snapshot.hasData){
+
         if(snapshot.data["groups"].length!=0){
           return ListView.builder(
               itemCount:snapshot.data["groups"].length,

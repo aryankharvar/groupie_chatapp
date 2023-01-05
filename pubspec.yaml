@@ -37,6 +37,7 @@ dependencies:
   cloud_firestore:
   firebase_auth:
   firebase_core:
+  firebase_messaging:
   shared_preferences: ^2.0.15
   image_picker: ^0.8.5+3
   firebase_storage:
@@ -44,6 +45,8 @@ dependencies:
   flutter_native_splash:
   flutter_launcher_icons:
   lottie:
+  http:
+  flutter_notification_channel: ^2.0.0
 
 
 

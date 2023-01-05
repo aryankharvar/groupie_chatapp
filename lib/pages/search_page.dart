@@ -122,14 +122,13 @@ class _SearchPageState extends State<SearchPage> {
     else{
       searchSnapshot.clear();
       setState(() {
-        hasUserSearched = false;
       });
     }
   }
 
   groupList() {
     return hasUserSearched
-        ? Expanded(
+        ? searchSnapshot.isEmpty? Expanded(child: Center(child: Text("No Data Found",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w600),))) :Expanded(
           child: ListView.builder(
       shrinkWrap: true,
       itemCount: searchSnapshot.length,

@@ -1,9 +1,13 @@
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:groupie_chatapp/utils/AppPref.dart';
+import 'package:groupie_chatapp/utils/widgets/common_widgets.dart';
+import 'package:http/http.dart';
 
 class DataBaseService{
   String uid=AppPref.getUserId()??'';
@@ -14,12 +18,39 @@ class DataBaseService{
   final CollectionReference groupCollection =
   FirebaseFirestore.instance.collection("groups");
 
+
+  final FirebaseMessaging firebaseMessaging= FirebaseMessaging.instance;
+
+  Future getFireBaseMessagingToken() async{
+    await firebaseMessaging.requestPermission();
+
+    await firebaseMessaging.getToken().then((value) async {
+      if(value!=null){
+        print("token $value");
+        await updateUserToken(value);
+      }
+    });
+
+  }
+
   uidPrint(){
     print("data base User Id: $uid");
   }
 
   clear(){
     uid='';
+  }
+
+  Future updateUserToken(String token) async {
+    try {
+      await userCollection.doc(uid).update({
+        "token":token,
+      });
+      return true;
+    } on FirebaseException catch (e) {
+      // TODO
+      return e.message!;
+    }
   }
 
   Future uploadUserProfileImage(File imageFile) async {
@@ -68,7 +99,15 @@ class DataBaseService{
 
   Future getUserData() async {
     DocumentSnapshot documentSnapshot=await userCollection.doc(uid).get();
-    return documentSnapshot.data()! as Map<String, dynamic>;
+    var data=documentSnapshot.data()as Map<String, dynamic>;
+    await subscribeToTopics(data["groups"]);
+    return data;
+  }
+
+  Future subscribeToTopics(List groups) async{
+    for(int i=0;i<groups.length;i++){
+      await firebaseMessaging.subscribeToTopic(getId(groups[i]));
+    }
   }
 
   Stream getUserGroups() {
@@ -107,6 +146,8 @@ class DataBaseService{
       "groupId": groupDocumentReference.id,
       "groupIcon": imageUrl,
     });
+
+    await firebaseMessaging.subscribeToTopic(groupDocumentReference.id);
 
     return await userCollection.doc(uid).update({
       "groups": FieldValue.arrayUnion(["${groupDocumentReference.id}_$groupName"])
@@ -155,8 +196,7 @@ class DataBaseService{
   }
 
   // toggling the group join/exit
-  Future<bool> toggleGroupJoin(
-      String groupId, String groupName) async {
+  Future<bool> toggleGroupJoin(String groupId, String groupName) async {
     // doc reference
     DocumentReference userDocumentReference = userCollection.doc(uid);
     DocumentReference groupDocumentReference = groupCollection.doc(groupId);
@@ -169,6 +209,7 @@ class DataBaseService{
       await groupDocumentReference.update({
         "members": FieldValue.arrayRemove(["${uid}_${AppPref.getUserName()}"])
       });
+      await firebaseMessaging.unsubscribeFromTopic(groupId);
       return false;
     } else {
       await userDocumentReference.update({
@@ -177,6 +218,7 @@ class DataBaseService{
       await groupDocumentReference.update({
         "members": FieldValue.arrayUnion(["${uid}_${AppPref.getUserName()}"])
       });
+      await firebaseMessaging.subscribeToTopic(groupId);
       return true;
     }
   }
@@ -190,7 +232,7 @@ class DataBaseService{
         .snapshots();
   }
 
-  sendMessage(String groupId,String msg, String sender) async {
+  sendMessage(String groupId,String groupName,String msg, String sender) async {
     String time=DateTime.now().millisecondsSinceEpoch.toString();
 
     await groupCollection.doc(groupId).collection("messages").add({
@@ -204,6 +246,34 @@ class DataBaseService{
       "recentMessageSender": sender,
       "recentMessageTime": time,
     });
+
+    await sendPushNotification(groupId,groupName, msg, sender);
+  }
+
+
+  // for sending push notification
+  Future<void> sendPushNotification(String groupId,String groupName,String msg, String sender) async {
+    try {
+      final body = {
+        "to": "/topics/$groupId",
+        "notification": {
+          "title": groupName, //our name should be send
+          "body": "$sender: $msg",
+          "android_channel_id": "chats"
+        },
+      };
+      var res = await post(Uri.parse('https://fcm.googleapis.com/fcm/send'),
+          headers: {
+            HttpHeaders.contentTypeHeader: 'application/json',
+            HttpHeaders.authorizationHeader:
+            'key=AAAAAXUJG08:APA91bF9AJgdjsNTJTZKVY95hzOxym3dbn4INh-re5YjZTxPpS2BnrvKf4MDG0ETzBHC1uM4EowmR-vAgtms0oMHK6foh3YRf4xOnU-8sz6eqzY3iHwPN9RneyjmHtG178VrOQrrRrmn'
+          },
+          body: jsonEncode(body));
+      print('Response status: ${res.statusCode}');
+      print('Response body: ${res.body}');
+    } catch (e) {
+      print('\nsendPushNotificationE: $e');
+    }
   }
 
 }

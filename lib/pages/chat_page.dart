@@ -44,7 +44,7 @@ class ChatPage extends StatelessWidget {
               suffixIcon: GestureDetector(
                 onTap: (){
                   if(messageController.text.isNotEmpty){
-                    DataBaseService().sendMessage(groupId, messageController.text, userName);
+                    DataBaseService().sendMessage(groupId, groupName,messageController.text, userName);
                     messageController.clear();
                   }
                 },

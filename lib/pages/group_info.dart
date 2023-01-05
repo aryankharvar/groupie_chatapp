@@ -178,7 +178,7 @@ class _groupInfoState extends State<groupInfo> {
                               ),
                             ],
                           ),
-                      title: Text("Group: ${widget.groupName}",style: TextStyle(fontWeight: FontWeight.bold),),
+                      title: Text(widget.groupName,style: TextStyle(fontWeight: FontWeight.bold),),
                       subtitle: Text("Admin: ${getName(snapshot.data["admin"])}",
                       ),
                     ),
