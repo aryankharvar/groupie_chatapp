@@ -134,7 +134,6 @@ class DataBaseService{
       "recentMessageSender": "",
     });
 
-    print(imageFile);
     String imageUrl='';
     if (imageFile!=null) {
       final ref = await FirebaseStorage.instance.ref("groupIcons/${groupDocumentReference.id}").putFile(imageFile);
